@@ -1,5 +1,4 @@
-// AIzaSyCHUCmpR7cT_yDFHC98CZJy2LTms-IwDlM
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Dropdown from "./Dropdown";
 import Convert from "./Convert";
 
@@ -21,6 +20,17 @@ const options = [
 const Translate = () => {
   const [language, setLanguage] = useState(options[0]);
   const [text, setText] = useState("");
+  const [debouncedText, setDebouncedText] = useState(text);
+
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      setDebouncedText(text);
+    }, 500);
+
+    return () => {
+      clearTimeout(timerId);
+    };
+  }, [text]);
 
   return (
     <div>
@@ -38,7 +48,7 @@ const Translate = () => {
       />
       <hr />
       <h3 className="ui header">Output</h3>
-      <Convert language={language} text={text} />
+      <Convert language={language} text={debouncedText} />
     </div>
   );
 };
